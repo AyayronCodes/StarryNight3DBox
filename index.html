@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starry Night Sky</title>
+  <style>
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      position: relative;
+      height: 100vh;
+      perspective: 1000px;
+      background-color: rgb(24, 24, 24);
+      overflow: hidden;
+      font-family: 'Lobster', sans-serif;
+    }
+    .warning-page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgb(24, 24, 24);
+      z-index: 100;
+    }
+    .warning-page.hidden {
+      display: none;
+    }
+    .warning-page span {
+      display: block;
+     text-align: center;
+      width: 80%;
+      font-size: 3rem;
+      color: whitesmoke;
+    }
+    .toggle-mode-button {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      /* transform: translateX(-50%); */
+      width: 200px;
+      height: 100px;
+      white-space: nowrap;
+      font-family: monospace;
+      font-size: 2rem;
+      color: rgb(37, 37, 37);
+      background-color: transparent;
+      z-index: 10;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+      transition: 0.3s;
+    }
+    .toggle-mode-button b {
+      display: block;
+      text-transform: uppercase;
+    }
+    .toggle-mode-button:hover {
+      transform: skew(-10deg);
+      color: rgb(59, 59, 59);
+    }
+    .toggle-mode-button:focus {
+      outline: none;
+    }
+    .container {
+      position: absolute;
+      top: -25vw;
+      left: 0;
+      width: 100vw;
+      height: 100vw;
+      transform: rotateX(0) rotateY(0);
+      transform-style: preserve-3d;
+      cursor: -webkit-grab;
+    }
+    .moving-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 15vw;
+      height: 15vw;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: contain;
+      transition: transform 2s ease-in;
+    }
+    .item-santa {
+      background-image: url('/santa.png');
+      /* animation: itemBounce 0.8s cubic-bezier(0.08, 0.58, 0.54, 0.74) infinite alternate; */
+    }
+    .wall {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      backface-visibility: hidden;
+      pointer-events: none;
+      /* background: url('/night_stars.png') center center / cover; */
+      /* color: white; */
+      transform-style: preserve-3d;
+      transition: color 0.5s ease;
+    }
+    .wall-front {
+      background-color: lightblue;
+      transform: translate3d(0, 0, -50vw);
+    }
+    .wall-back {
+      background-color: lightcoral;
+      transform: translate3d(0, 0, 50vw) rotateY(180deg);
+    }
+    .wall-left {
+      background-color: lightcyan;
+      transform: translate3d(-50vw, 0, 0) rotateY(90deg);
+    }
+    .wall-right {
+      background-color: lightgoldenrodyellow;
+      transform: translate3d(50vw, 0, 0) rotateY(-90deg);
+    }
+    .wall-up {
+      background-color: lightsalmon;
+      transform: translate3d(0, -50vw, 0) rotateX(-90deg);
+    }
+    .wall-down {
+      background-color: lightgreen;
+      transform: translate3d(0, 50vw, 0) rotateX(90deg);
+    }
+    .wall-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: contain;
+    }
+    .item-message {
+      left: 50%;
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
+      width: 80%;
+      height: 50%;
+      font-size: 12rem;
+      letter-spacing: 10px;
+      text-shadow: 3px 3px 10px white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    /* .item-santa {
+      left: 50px;
+      width: 500px;
+      height: 500px;
+      background-image: url('santa.png');
+      transform: translate3d(0, 0, 200px) rotate(0) rotateY(30deg);
+      animation: itemBounce 0.8s cubic-bezier(0.08, 0.58, 0.54, 0.74) infinite alternate;
+    } */
+
+    /* animations */
+    @keyframes itemBounce {
+      to {
+        transform: translate3d(-20px, -15px, 0) rotate(2deg) rotateY(30deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="warning-page">
+    <span>Aww bummer, your screen size is too small...<br>Please view on bigger screen (1024px and up)</span>
+  </div>
+  <button class="toggle-mode-button">Click here for<b>starry mode</b></button>
+  <div class="container">
+    <div class="moving-item item-santa"></div>
+    <div class="wall wall-front">
+      <div class="wall-item item-message">Merry Christmas!</div>
+      <!-- <div class="wall-item item-santa"></div> -->
+    </div>
+    <div class="wall wall-back">
+      <div class="wall-item item-message">Tis the season...</div>
+    </div>
+    <div class="wall wall-left">
+      <div class="wall-item item-message">to be jolly!</div>
+    </div>
+    <div class="wall wall-right">
+      <div class="wall-item item-message">& Happy new year!</div>
+    </div>
+    <div class="wall wall-up">
+      <div class="wall-item item-message">Up up and away!</div>
+    </div>
+    <div class="wall wall-down">
+      <div class="wall-item item-message">Down the chimney he goes!</div>
+    </div>
+  </div>
+
+  <script>
+    const warningPage = document.querySelector('.warning-page')
+    const toggleModeButton = document.querySelector('.toggle-mode-button')
+    const container = document.querySelector('.container')
+    const itemSanta = document.querySelector('.item-santa')
+    const walls = document.querySelectorAll('.wall')
+    let mouseDown = false
+    const lastPosRotation = {x: 0, y: 0}
+    const clickStartPos = {x:0, y: 0}
+    let starryModeStatus = false
+
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.innerWidth < 1024) {
+        stopApp()
+        return
+      }
+      else {
+        runApp()
+        return
+      }
+    })
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth < 1024) {
+        stopApp()
+        return
+      }
+      else {
+        runApp()
+        return
+      }
+    })
+
+    function runApp() {
+      warningPage.classList.add('hidden')
+      document.body.style.perspective = '1000px'
+      init()
+    }
+
+    function stopApp() {
+      warningPage.classList.remove('hidden')
+      document.body.style.perspective = ''
+    }
+
+    function init() {
+      window.addEventListener('mousedown', (e) => {
+        mouseDown = true
+        clickStartPos.x = e.clientX
+        clickStartPos.y = e.clientY
+      })
+
+      window.addEventListener('mouseup', () => {
+        mouseDown = false
+      })
+
+      window.addEventListener('mousemove', (e) => {
+        if (!mouseDown) return
+
+        const diffX = e.clientX - clickStartPos.x
+        const diffY = e.clientY - clickStartPos.y
+        
+        lastPosRotation.x += diffY / 10
+        lastPosRotation.y -= diffX / 10
+
+        container.style.transform = `rotateX(${lastPosRotation.x}deg) rotateY(${lastPosRotation.y}deg)`
+
+        clickStartPos.x = e.clientX
+        clickStartPos.y = e.clientY
+      })
+
+      toggleModeButton.addEventListener('click', () => {
+        if (!starryModeStatus) {
+          walls.forEach(wall => {
+            wall.style.background = `url('/night_stars.png') center center / cover`
+            wall.style.color = 'whitesmoke' 
+            toggleModeButton.style.color = 'whitesmoke'
+            toggleModeButton.innerHTML = `Click here for<b>colorful mode</b>`
+            starryModeStatus = true
+          })
+        }
+        else {
+          walls.forEach(wall => {
+            wall.style.background = ''
+            wall.style.color = 'rgb(37, 37, 37)'
+            toggleModeButton.style.color = 'rgb(37, 37, 37)'
+            toggleModeButton.innerHTML = `Click here for<b>starry mode</b>`
+            starryModeStatus = false
+          })
+        }
+      })
+
+      function getRandom3dCoords() {
+        // subtract 15(vw) so that character does not go out the box
+        return [Math.random() * 85, Math.random() * 85, Math.random() * 90 - 40]
+      }
+
+      function moveCharacter(characterEl) {
+        const [randomX, randomY, randomZ] = getRandom3dCoords()
+        characterEl.style.transform = `translate3d(${randomX}vw, ${randomY}vw, ${randomZ}vw)`
+      }
+
+      setInterval(() => {
+        moveCharacter(itemSanta)
+      }, 2100)
+    }
+  </script>
+</body>
+</html>
